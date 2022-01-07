@@ -27,11 +27,12 @@ public class Client {
         new Thread(receivingMessages).start();
         while(true){
             String message = keyboard.readLine();
-            output.println(message);
+
             if (message.equals("quit")) {
                 output.println(message);
                 break;
             }
+            output.println(message);
 
         }
         output.close();
