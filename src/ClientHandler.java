@@ -60,6 +60,7 @@ public class ClientHandler implements Runnable {
                     else {
                         clients.get(0).output.println(clients.get(1).getPlayerName()+" has left the game.");
                     }
+                    output.close();
                     clients.remove(this);
                     break;
                 }

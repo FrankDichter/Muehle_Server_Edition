@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Objects;
 
 public class ReceivingMessages implements Runnable {
 
@@ -22,9 +23,11 @@ public class ReceivingMessages implements Runnable {
 
         try {
             while(true){
+
                 serverResponse = input.readLine();
 
                 if(serverResponse == "quit" || serverResponse == null) break;
+
 
                 System.out.println(serverResponse);
             }
