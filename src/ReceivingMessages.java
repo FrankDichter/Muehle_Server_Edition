@@ -24,7 +24,7 @@ public class ReceivingMessages implements Runnable {
             while(true){
                 serverResponse = input.readLine();
 
-                if(serverResponse == null) break;
+                if(serverResponse == "quit" || serverResponse == null) break;
 
                 System.out.println(serverResponse);
             }

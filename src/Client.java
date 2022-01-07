@@ -27,9 +27,14 @@ public class Client {
         new Thread(receivingMessages).start();
         while(true){
             String message = keyboard.readLine();
-            if (message.equals("quit")) break;
             output.println(message);
+            if (message.equals("quit")) {
+                output.println(message);
+                break;
+            }
+
         }
+        output.close();
         socket.close();
         System.exit(0);
     }
