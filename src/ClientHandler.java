@@ -1,6 +1,7 @@
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class ClientHandler implements Runnable {
     private Socket client;
@@ -52,10 +53,15 @@ public class ClientHandler implements Runnable {
 
             while(true){
                 String request = input.readLine();
-                if (request == "quit") {
-                    for (ClientHandler clientHandler : clients){
-                        clientHandler.output.println(Server.getClientThread().getPlayerName()+" has left");
+                if (Objects.equals(request, "quit")) {
+                    if (this.equals(clients.get(0))){
+                        clients.get(1).output.println(clients.get(0).getPlayerName()+" has left the game.");
                     }
+                    else {
+                        clients.get(0).output.println(clients.get(1).getPlayerName()+" has left the game.");
+                    }
+                    clients.remove(this);
+                    break;
                 }
                 else {
                     outToAll(request);
