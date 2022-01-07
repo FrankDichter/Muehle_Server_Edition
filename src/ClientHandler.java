@@ -74,6 +74,7 @@ public class ClientHandler implements Runnable {
         }
         finally {
             output.close();
+            clients.remove(this);
             try {
                 input.close();
             } catch (IOException e) {
