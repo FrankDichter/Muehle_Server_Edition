@@ -88,11 +88,6 @@ public class ClientHandler implements Runnable {
         setPlayerName(nameRequest);
         output.println("Welcome to the game, "+getPlayerName()+"!\n" +
                 "\nENTER 'quit' TO LEAVE THE GAME OR SEND A MESSAGE TO YOUR OPPONENT.\n");
-        if (this.equals(Server.getClients().get(0))){
-            Server.getClients().get(1).output.println(">"+getPlayerName()+" has entered the game.<");
-        }
-        else{
-            Server.getClients().get(0).output.println(">"+getPlayerName()+" has entered the game.<");
-        }
+        Server.getClients().get(indexSendingTo).output.println(">"+getPlayerName()+" has entered the game.<");
     }
 }
