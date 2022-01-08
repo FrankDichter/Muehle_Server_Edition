@@ -90,7 +90,7 @@ public class Frame extends JFrame{
 
     public Frame(){
         clientscopy = new ArrayList<>();
-        clientscopy=Server.GiveClients();
+        clientscopy=Server.getClients();
 
         this.setTitle("Mühle");
         this.setLayout(null);
@@ -495,7 +495,7 @@ public class Frame extends JFrame{
         }
     }
     public void firstPhaseSetStone(Feld field){
-        if (clientscopy.get(0).playerColour==playerColour){
+        if (clientscopy.get(0).isPlayerColour()==playerColour){
             field.setIcon(new ImageIcon("WeisserStein.png"));
             whiteStonesOnBoard.add(field);
             amountOfUnusedWhiteStones --;

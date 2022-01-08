@@ -19,23 +19,18 @@ public class ReceivingMessages implements Runnable {
 
     @Override
     public void run() {
-        String serverResponse = null;
-
         try {
-            while(true){
-
-                serverResponse = input.readLine();
-
-                if(serverResponse == "quit" || serverResponse == null) break;
-
-
+            String serverResponse = input.readLine();
+            while(!(serverResponse == null)) {
                 System.out.println(serverResponse);
+                serverResponse = input.readLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             try {
                 input.close();
+                socket.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
