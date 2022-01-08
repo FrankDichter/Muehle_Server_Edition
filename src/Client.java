@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -27,11 +26,6 @@ public class Client {
             message = keyboard.readLine();
             output.println(message);
         }
-        /*
-        do {
-            message = keyboard.readLine();
-            output.println(message);
-        } while (!message.equals("quit"));*/
         Thread.currentThread().interrupt();
     }
 }
