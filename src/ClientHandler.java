@@ -7,6 +7,7 @@ public class ClientHandler implements Runnable {
     private BufferedReader input;
     private PrintWriter output;
     private String playerName;
+    private int indexSendingTo;
     private boolean playerColour;
 
     public void setPlayerName(String playerName) {
@@ -25,7 +26,6 @@ public class ClientHandler implements Runnable {
 
     public ClientHandler (Socket clientSocket,boolean playerColour) throws IOException {
         this.client = clientSocket;
-        //this.clients = clients;
         this.playerColour = playerColour;
         input = new BufferedReader(new InputStreamReader(client.getInputStream()));
         output = new PrintWriter(client.getOutputStream(),true);
@@ -34,7 +34,6 @@ public class ClientHandler implements Runnable {
 
     public ClientHandler(Socket client) throws IOException{
         this.client = client;
-        //this.clients = clients;
         input = new BufferedReader(new InputStreamReader(client.getInputStream()));
         output = new PrintWriter(client.getOutputStream(),true);
     }
@@ -44,27 +43,23 @@ public class ClientHandler implements Runnable {
         try{
             //Dialog that asks for the name
             nameInteraction(playerColour);
-
+            if (this.equals(Server.getClients().get(0))){
+                indexSendingTo = 1;
+            }
+            else {
+                indexSendingTo = 0;
+            }
 
             String message = input.readLine();
+
             while(!Objects.equals(message, "quit") && !Objects.equals(message, null)) {
-                if (this.equals(Server.getClients().get(0))) {
-                    Server.getClients().get(1).output.println("["+getPlayerName()+"]: "+message);
-                }
-                else {
-                    Server.getClients().get(0).output.println("["+getPlayerName()+"]: "+message);
-                }
+                Server.getClients().get(indexSendingTo).output.println("["+getPlayerName()+"]: "+message);
                 message = input.readLine();
             }
             if(Server.getClients().get(2) != null) {
                 Server.getClients().get(2).setPlayerColour(this.isPlayerColour());
             }
-            if (this.equals(Server.getClients().get(0))){
-                Server.getClients().get(1).output.println(Server.getClients().get(0).getPlayerName()+" has left the game.");
-            }
-            else {
-                Server.getClients().get(0).output.println(Server.getClients().get(1).getPlayerName()+" has left the game.");
-            }
+            Server.getClients().get(indexSendingTo).output.println(Server.getClients().get(0).getPlayerName()+" has left the game.");
         } catch (IOException e){
             System.err.println("IOException in client handler");
             System.err.println(e.getStackTrace());
@@ -72,6 +67,7 @@ public class ClientHandler implements Runnable {
         finally {
             output.close();
             Server.getClients().remove(this);
+            Server.getClients().get(0).indexSendingTo = 1;
             try {
                 input.close();
                 client.close();
