@@ -7,21 +7,14 @@ public class ClientHandler implements Runnable {
     private Socket client;
     private BufferedReader input;
     private PrintWriter output;
-
-    public ArrayList<ClientHandler> getClients() {
-        return clients;
-    }
-
+    private String playerName;
     private ArrayList<ClientHandler> clients;
     public boolean playerColour;
     private static boolean WhitePlayerTurn=true;
+
     public static boolean isWhitePlayerTurn() {
         return WhitePlayerTurn;
     }
-
-
-    private String playerName;
-
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
     }
@@ -29,13 +22,9 @@ public class ClientHandler implements Runnable {
     public String getPlayerName() {
         return playerName;
     }
-
-
-
     public boolean isPlayerColour() {
         return playerColour;
     }
-
     public ClientHandler (Socket clientSocket, ArrayList<ClientHandler> clients, boolean playerColour) throws IOException {
         this.client = clientSocket;
         this.clients = clients;
@@ -47,27 +36,19 @@ public class ClientHandler implements Runnable {
     @Override
     public void run(){
         try{
-            Frame frame = new Frame();
-
+            //Dialog that asks for the name
             nameInteraction(Server.getClientThread().isPlayerColour());
 
-            while(true){
-                String request = input.readLine();
-                if (Objects.equals(request, "quit")) {
-                    if (this.equals(clients.get(0))){
-                        clients.get(1).output.println(clients.get(0).getPlayerName()+" has left the game.");
-                    }
-                    else {
-                        clients.get(0).output.println(clients.get(1).getPlayerName()+" has left the game.");
-                    }
-                    output.close();
-                    clients.remove(this);
-                    break;
-                }
-                else {
-                    outToAll(request);
-                }
-
+            String request = input.readLine();
+            while(!Objects.equals(request, "quit") && !Objects.equals(request, null)) {
+                outToAll(request);
+                request = input.readLine();
+            }
+            if (this.equals(clients.get(0))){
+                clients.get(1).output.println(clients.get(0).getPlayerName()+" has left the game.");
+            }
+            else {
+                clients.get(0).output.println(clients.get(1).getPlayerName()+" has left the game.");
             }
         } catch (IOException e){
             System.err.println("IOException in client handler");
@@ -78,17 +59,15 @@ public class ClientHandler implements Runnable {
             clients.remove(this);
             try {
                 input.close();
+                client.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
-
     }
     private void outToAll(String message){
-        for (ClientHandler clientHandler : clients){
-            clientHandler.output.println("["+getPlayerName()+"]: "+message);
-        }
+        clients.get(0).output.println("["+getPlayerName()+"]: "+message);
+        clients.get(1).output.println("["+getPlayerName()+"]: "+message);
     }
     private void nameInteraction (boolean playerColour) throws IOException {
         if (playerColour) {
@@ -100,7 +79,12 @@ public class ClientHandler implements Runnable {
         String nameRequest = input.readLine();
         setPlayerName(nameRequest);
         output.println("Welcome to the game, "+getPlayerName()+"!\n" +
-                "Enter 'quit' to leave the game or send a message to " +
-                "your opponent.");
+                "\nENTER 'quit' TO LEAVE THE GAME OR SEND A MESSAGE TO YOUR OPPONENT.\n");
+        if (this.equals(clients.get(0))){
+            clients.get(1).output.println(">"+getPlayerName()+" has entered the game.<");
+        }
+        else{
+            clients.get(0).output.println(">"+getPlayerName()+" has entered the game.<");
+        }
     }
 }

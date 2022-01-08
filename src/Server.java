@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -13,10 +10,10 @@ public class Server {
     //Liste, die die einzelnen Threads hält:
     private static ArrayList<ClientHandler> clients;
     private static ExecutorService pool = Executors.newFixedThreadPool(2);
-    public static ArrayList GiveClients(){
+
+    public static ArrayList<ClientHandler> getClients(){
         return clients;
     }
-
     public static ClientHandler getClientThread() {
         return clientThread;
     }
@@ -29,7 +26,7 @@ public class Server {
         ServerSocket serverSocket = new ServerSocket(8080);
 
 
-        while (clients.size() < 2) {
+        while (true) {
 
             System.out.println("[SERVER] Waiting for client connection...");
             Socket client = serverSocket.accept();

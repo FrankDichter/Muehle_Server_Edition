@@ -10,33 +10,28 @@ public class Client {
 
     public static void main(String[] args) throws IOException {
 
+        //Basic stuff -> Socket, In- and Output
         Socket socket = new Socket("127.0.0.1",8080);
         ReceivingMessages receivingMessages = new ReceivingMessages(socket);
-        //BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
         PrintWriter output = new PrintWriter(socket.getOutputStream(),true);
 
-        /*String askingForName = input.readLine();
-        System.out.println(askingForName);
-
-        String giveNameToServer = keyboard.readLine();
-        output.println(giveNameToServer);
-
-        String greeting = input.readLine();
-        System.out.println(greeting);*/
+        //starting new Thread that's responsible for receiving messages all the time
         new Thread(receivingMessages).start();
-        while(true){
-            String message = keyboard.readLine();
 
-            if (message.equals("quit")) {
-                output.println(message);
-                break;
-            }
+        //instanciating the message a client can send
+        String message = "dummyString";
+
+        //the client can leave the program by entering 'quit'
+        while (!message.equals("quit")) {
+            message = keyboard.readLine();
             output.println(message);
-
         }
-        output.close();
-        socket.close();
-        System.exit(0);
+        /*
+        do {
+            message = keyboard.readLine();
+            output.println(message);
+        } while (!message.equals("quit"));*/
+        Thread.currentThread().interrupt();
     }
 }
