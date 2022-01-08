@@ -475,11 +475,7 @@ public class Frame extends JFrame{
                     }
                 }
             }
-            if(ClientHandler.isWhitePlayerTurn()==true){
-                YourTurn();
-                NotYourTurn();
 
-            }
         });
     }
     public void firstPhaseMove(Feld field){
