@@ -11,10 +11,19 @@ public class GameHandler implements Runnable {
         return frame;
     }
 
+    public void setPlayerColour(boolean playerColour) {
+        this.playerColour = playerColour;
+    }
+
     private Frame frame;
 
     public GameHandler(Socket socket) {
         this.socket = socket;
+    }
+
+    public GameHandler(Socket socket, boolean playerColour) {
+        this.socket = socket;
+        this.playerColour = playerColour;
     }
 
     @Override
