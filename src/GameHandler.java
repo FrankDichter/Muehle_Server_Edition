@@ -1,7 +1,7 @@
 import java.io.BufferedReader;
 import java.net.Socket;
 
-public class Game implements Runnable {
+public class GameHandler implements Runnable {
 
     private Socket socket;
     private BufferedReader input;
@@ -13,7 +13,7 @@ public class Game implements Runnable {
 
     private Frame frame;
 
-    public Game(Socket socket) {
+    public GameHandler(Socket socket) {
         this.socket = socket;
     }
 
