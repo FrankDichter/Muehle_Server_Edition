@@ -25,11 +25,7 @@ public class Frame extends JFrame{
     private boolean stoneIsSelected;
     private Feld selectedStone;
 
-    /**
-     * Variables for server communication:
-     */
-    private Feld fieldToAdapt;
-    private int whatToDo;
+
 
     private JPanel largeHorizontalLine1 ;
     private JPanel largeHorizontalLine2;
