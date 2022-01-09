@@ -9,18 +9,10 @@ public class ClientHandler implements Runnable {
     private String playerName;
     private int indexSendingTo;
     private boolean playerColour;
-    private GameHandler game = new GameHandler(client);
-
-    public boolean isSignedIn() {
-        return signedIn;
-    }
-
     private boolean signedIn = false;
+    private GameHandler gameHandler;
 
-    public GameHandler getGame() {
-        return game;
-    }
-
+    public boolean isSignedIn() {return signedIn;}
     public String getPlayerName() {
         return playerName;
     }
@@ -28,10 +20,12 @@ public class ClientHandler implements Runnable {
         return playerColour;
     }
     public void setPlayerColour(boolean playerColour) {
-        this.playerColour = playerColour;
-    }
+        this.playerColour = playerColour;}
+    public GameHandler getGameHandler() {return gameHandler;}
+    public void setGameHandler(GameHandler gameHandler) {
+        this.gameHandler = gameHandler;}
 
-    public ClientHandler (Socket clientSocket,boolean playerColour) throws IOException {
+    public ClientHandler (Socket clientSocket, boolean playerColour) throws IOException {
         this.client = clientSocket;
         this.playerColour = playerColour;
         input = new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -58,7 +52,6 @@ public class ClientHandler implements Runnable {
             if (Server.getClients().size() > 1 && signedIn) {
                 Server.getClients().get(indexSendingTo).output.println(">"+playerName+" has entered the game.<");
             }
-            //new Thread(game).start();
             String message = input.readLine();
 
             while(!Objects.equals(message, "quit") && !Objects.equals(message, null)) {
@@ -72,12 +65,15 @@ public class ClientHandler implements Runnable {
         finally {
             if(Server.getClients().size() > 2) {
                 Server.getClients().get(2).setPlayerColour(this.playerColour);
+                Server.getGames().get(2).setPlayerColour(this.playerColour);
             }
             if(Server.getClients().size() > 1 && signedIn) {
-                Server.getClients().get(indexSendingTo).output.println(">"+Server.getClients().get(0).playerName+" has left the game.<");
+                Server.getClients().get(indexSendingTo).output.println(">"+this.playerName+" has left the game.<");
             }
             output.close();
             Server.getClients().remove(this);
+            Server.getGames().remove(this.gameHandler);
+
             if(Server.getClients().size() > 0) {
                 Server.getClients().get(0).indexSendingTo = 1;
             }

@@ -15,33 +15,42 @@ public class Server {
     private static ExecutorService gamePool = Executors.newFixedThreadPool(2);
     private static GameHandler gameThread;
 
-    public static ArrayList<ClientHandler> getClients(){
-        return clients;
-    }
+    public static ArrayList<ClientHandler> getClients(){return clients;}
+
+    public static ArrayList<GameHandler> getGames() {return games;}
 
     public static void main(String[] args) throws IOException {
 
         clients = new ArrayList<>();
+        games = new ArrayList<>();
         ServerSocket serverSocket = new ServerSocket(8080);
 
         while (true) {
 
-            System.out.println("[SERVER] Waiting for client connection...");
+            System.out.println("[SERVER]: Waiting for client connection...");
             Socket client = serverSocket.accept();
-            System.out.println("[SERVER] Connected to client!");
+            System.out.println("[SERVER]: Connected to client!");
             if (clients.size() == 0){
                 clientThread = new ClientHandler(client,true);
+                gameThread = new GameHandler(client, clientThread.isPlayerColour());
             }
             else if (clients.size() == 1){
                 clientThread = new ClientHandler(client,!clients.get(0).isPlayerColour());
+                gameThread = new GameHandler(client, clientThread.isPlayerColour());
             }
             else {
                 clientThread = new ClientHandler(client);
+                gameThread = new GameHandler(client);
+
             }
-            gameThread = new GameHandler(client);
-            gamePool.execute(gameThread);
+            clientThread.setGameHandler(gameThread);
             clients.add(clientThread);
             playerPool.execute(clientThread);
+            games.add(gameThread);
+            if (clients.size() == 2) {
+                gamePool.execute(games.get(0));
+                gamePool.execute(games.get(1));
+            }
         }
     }
 }
