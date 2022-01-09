@@ -55,10 +55,10 @@ public class ClientHandler implements Runnable {
             else {
                 indexSendingTo = 0;
             }
-            if (Server.getClients().size() > 1) {
+            if (Server.getClients().size() > 1 && signedIn) {
                 Server.getClients().get(indexSendingTo).output.println(">"+playerName+" has entered the game.<");
             }
-            new Thread(game).start();
+            //new Thread(game).start();
             String message = input.readLine();
 
             while(!Objects.equals(message, "quit") && !Objects.equals(message, null)) {
@@ -70,11 +70,10 @@ public class ClientHandler implements Runnable {
             System.err.println(e.getStackTrace());
         }
         finally {
-            game.getFrame().setVisible(false);
             if(Server.getClients().size() > 2) {
                 Server.getClients().get(2).setPlayerColour(this.playerColour);
             }
-            if(Server.getClients().size() > 1) {
+            if(Server.getClients().size() > 1 && signedIn) {
                 Server.getClients().get(indexSendingTo).output.println(">"+Server.getClients().get(0).playerName+" has left the game.<");
             }
             output.close();
