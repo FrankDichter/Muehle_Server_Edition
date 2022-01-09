@@ -15,6 +15,7 @@ public class Server {
     public static ArrayList<ClientHandler> getClients(){
         return clients;
     }
+
     public static void main(String[] args) throws IOException {
 
         clients = new ArrayList<>();

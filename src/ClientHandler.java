@@ -10,10 +10,6 @@ public class ClientHandler implements Runnable {
     private int indexSendingTo;
     private boolean playerColour;
 
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
-    }
-
     public String getPlayerName() {
         return playerName;
     }
@@ -31,7 +27,6 @@ public class ClientHandler implements Runnable {
         output = new PrintWriter(client.getOutputStream(),true);
 
     }
-
     public ClientHandler(Socket client) throws IOException{
         this.client = client;
         input = new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -53,13 +48,13 @@ public class ClientHandler implements Runnable {
             String message = input.readLine();
 
             while(!Objects.equals(message, "quit") && !Objects.equals(message, null)) {
-                Server.getClients().get(indexSendingTo).output.println("["+getPlayerName()+"]: "+message);
+                Server.getClients().get(indexSendingTo).output.println("["+playerName+"]: "+message);
                 message = input.readLine();
             }
             if(Server.getClients().get(2) != null) {
-                Server.getClients().get(2).setPlayerColour(this.isPlayerColour());
+                Server.getClients().get(2).setPlayerColour(this.playerColour);
             }
-            Server.getClients().get(indexSendingTo).output.println(Server.getClients().get(0).getPlayerName()+" has left the game.");
+            Server.getClients().get(indexSendingTo).output.println(Server.getClients().get(0).playerName+" has left the game.");
         } catch (IOException e){
             System.err.println("IOException in client handler");
             System.err.println(e.getStackTrace());
@@ -85,9 +80,9 @@ public class ClientHandler implements Runnable {
             output.println("Hello player black! Please enter your name:");
         }
         String nameRequest = input.readLine();
-        setPlayerName(nameRequest);
+        playerName = nameRequest;
         output.println("Welcome to the game, "+getPlayerName()+"!\n" +
                 "\nENTER 'quit' TO LEAVE THE GAME OR SEND A MESSAGE TO YOUR OPPONENT.\n");
-        Server.getClients().get(indexSendingTo).output.println(">"+getPlayerName()+" has entered the game.<");
+        Server.getClients().get(indexSendingTo).output.println(">"+playerName+" has entered the game.<");
     }
 }
