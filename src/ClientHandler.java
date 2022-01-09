@@ -9,7 +9,7 @@ public class ClientHandler implements Runnable {
     private String playerName;
     private int indexSendingTo;
     private boolean playerColour;
-    private Game game = new Game(client);
+    private GameHandler game = new GameHandler(client);
 
     public boolean isSignedIn() {
         return signedIn;
@@ -17,7 +17,7 @@ public class ClientHandler implements Runnable {
 
     private boolean signedIn = false;
 
-    public Game getGame() {
+    public GameHandler getGame() {
         return game;
     }
 

@@ -9,8 +9,11 @@ public class Server {
 
     //Liste, die die einzelnen Threads hält:
     private static ArrayList<ClientHandler> clients;
-    private static ExecutorService pool = Executors.newFixedThreadPool(2);
+    private static ExecutorService playerPool = Executors.newFixedThreadPool(2);
     private static ClientHandler clientThread;
+    private static ArrayList<GameHandler> games;
+    private static ExecutorService gamePool = Executors.newFixedThreadPool(2);
+    private static GameHandler gameThread;
 
     public static ArrayList<ClientHandler> getClients(){
         return clients;
@@ -35,8 +38,10 @@ public class Server {
             else {
                 clientThread = new ClientHandler(client);
             }
+            gameThread = new GameHandler(client);
+            gamePool.execute(gameThread);
             clients.add(clientThread);
-            pool.execute(clientThread);
+            playerPool.execute(clientThread);
         }
     }
 }
