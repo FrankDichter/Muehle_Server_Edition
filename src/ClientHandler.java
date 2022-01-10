@@ -10,7 +10,6 @@ public class ClientHandler implements Runnable {
     private int indexSendingTo;
     private boolean playerColour;
     private boolean signedIn = false;
-    private GameHandler gameHandler;
 
     public boolean isSignedIn() {return signedIn;}
     public String getPlayerName() {
@@ -21,9 +20,6 @@ public class ClientHandler implements Runnable {
     }
     public void setPlayerColour(boolean playerColour) {
         this.playerColour = playerColour;}
-    public GameHandler getGameHandler() {return gameHandler;}
-    public void setGameHandler(GameHandler gameHandler) {
-        this.gameHandler = gameHandler;}
 
     public ClientHandler (Socket clientSocket, boolean playerColour) throws IOException {
         this.client = clientSocket;
@@ -51,6 +47,10 @@ public class ClientHandler implements Runnable {
             }
             if (Server.getClients().size() > 1 && signedIn) {
                 Server.getClients().get(indexSendingTo).output.println(">"+playerName+" has entered the game.<");
+                if(Server.getClients().get(indexSendingTo).signedIn) {
+                    new Thread(Server.getGames().get(0)).start();
+                    new Thread(Server.getGames().get(1)).start();
+                }
             }
             String message = input.readLine();
 
@@ -65,14 +65,13 @@ public class ClientHandler implements Runnable {
         finally {
             if(Server.getClients().size() > 2) {
                 Server.getClients().get(2).setPlayerColour(this.playerColour);
-                Server.getGames().get(2).setPlayerColour(this.playerColour);
             }
             if(Server.getClients().size() > 1 && signedIn) {
                 Server.getClients().get(indexSendingTo).output.println(">"+this.playerName+" has left the game.<");
             }
             output.close();
             Server.getClients().remove(this);
-            Server.getGames().remove(this.gameHandler);
+            //Server.getGames().remove(this.gameHandler);
 
             if(Server.getClients().size() > 0) {
                 Server.getClients().get(0).indexSendingTo = 1;

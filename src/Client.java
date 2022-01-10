@@ -5,8 +5,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class Client {
-
-
     public static void main(String[] args) throws IOException {
 
         //Basic stuff -> Socket, In- and Output
@@ -19,7 +17,6 @@ public class Client {
         //starting new Thread that's responsible for receiving messages all the time
         new Thread(receivingMessages).start();
 
-
         //instanciating the message a client can send
         String message = "dummyString";
 
@@ -29,5 +26,6 @@ public class Client {
             output.println(message);
         }
         Thread.currentThread().interrupt();
+
     }
 }
