@@ -3,7 +3,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Frame extends JFrame{
+public class Frame extends JFrame {
     private boolean playerColour;
     private boolean gameOver;
     private int amountOfUnusedWhiteStones;
@@ -22,8 +22,13 @@ public class Frame extends JFrame{
     private JLabel blackWins;
     private JLabel whiteWins;
     private JPanel panel;
+    private JLabel displayBlackPlayer;
+    private JLabel displayWhitePlayer;
     private boolean stoneIsSelected;
     private Feld selectedStone;
+    private Action action;
+    private JPanel displayPlayerColour;
+    private int indexSendingTo;
 
 
 
@@ -66,33 +71,40 @@ public class Frame extends JFrame{
     private JPanel horizontalCrossingLine2;
     private JPanel horizontalCrossingLine3;
     private JPanel horizontalCrossingLine4;
-    private static ArrayList<ClientHandler> clientscopy;
-    public void NotYourTurn(){
-        for(int i=0;i<3;i++) {
-            for (int j = 0; j < 8; j++) {
-                fields[i][j].setEnabled(false);
-            }
 
-        }
-    }
-    public void YourTurn(){
-        for(int i=0;i<3;i++) {
-            for (int j = 0; j < 8; j++) {
-                fields[i][j].setEnabled(true);
-            }
+    private MyMouseListener myMouseListener1;
+    private MyMouseListener myMouseListener2;
+    private MyMouseListener myMouseListener3;
+    private MyMouseListener myMouseListener4;
+    private MyMouseListener myMouseListener5;
+    private MyMouseListener myMouseListener6;
+    private MyMouseListener myMouseListener7;
+    private MyMouseListener myMouseListener8;
+    private MyMouseListener myMouseListener9;
+    private MyMouseListener myMouseListener10;
+    private MyMouseListener myMouseListener11;
+    private MyMouseListener myMouseListener12;
+    private MyMouseListener myMouseListener13;
+    private MyMouseListener myMouseListener14;
+    private MyMouseListener myMouseListener15;
+    private MyMouseListener myMouseListener16;
+    private MyMouseListener myMouseListener17;
+    private MyMouseListener myMouseListener18;
+    private MyMouseListener myMouseListener19;
+    private MyMouseListener myMouseListener20;
+    private MyMouseListener myMouseListener21;
+    private MyMouseListener myMouseListener22;
+    private MyMouseListener myMouseListener23;
+    private MyMouseListener myMouseListener24;
 
-        }
-    }
 
-    public Frame(){
-        clientscopy = new ArrayList<>();
-        clientscopy=Server.getClients();
-
+    public Frame(boolean colour, int indexSendingTo){
         this.setTitle("Mühle");
         this.setLayout(null);
-        this.setSize(800,825);
+        this.setSize(800,875);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
+        this.indexSendingTo = indexSendingTo;
         playerColour = true;
         gameOver = false;
         amountOfUnusedWhiteStones = 9;
@@ -114,6 +126,15 @@ public class Frame extends JFrame{
         whiteMoveLabel.setVerticalAlignment(JLabel.CENTER);
         whiteMoveLabel.setHorizontalAlignment(JLabel.CENTER);
 
+        displayBlackPlayer = new JLabel("You are player black.");
+        displayBlackPlayer.setVerticalAlignment(JLabel.CENTER);
+        displayBlackPlayer.setHorizontalAlignment(JLabel.CENTER);
+        displayBlackPlayer.setForeground(Color.white);
+
+        displayWhitePlayer = new JLabel("You are player white.");
+        displayWhitePlayer.setVerticalAlignment(JLabel.CENTER);
+        displayWhitePlayer.setHorizontalAlignment(JLabel.CENTER);
+
         countLabel = new JLabel(String.valueOf(amountOfUnusedBlackStones));
         countLabel.setVerticalAlignment(JLabel.TOP);
         countLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -125,6 +146,24 @@ public class Frame extends JFrame{
         panel.add(whiteMoveLabel,BorderLayout.CENTER);
         panel.add(countLabel,BorderLayout.NORTH);
         this.add(panel);
+
+
+        displayPlayerColour = new JPanel();
+        if(colour) {
+            displayPlayerColour.setBackground(new Color(245,245,220,255));
+            displayPlayerColour.setBounds(300,775,200,50);
+            displayPlayerColour.setLayout(new BorderLayout());
+            displayPlayerColour.add(displayWhitePlayer,BorderLayout.CENTER);
+        }
+        else {
+            displayPlayerColour.setBackground(Color.black);
+            displayPlayerColour.setBounds(300,775,200,50);
+            displayPlayerColour.setLayout(new BorderLayout());
+            displayPlayerColour.add(displayBlackPlayer,BorderLayout.CENTER);
+        }
+        this.add(displayPlayerColour);
+
+
 
         largeHorizontalLine1 = new JPanel();
         largeHorizontalLine1.setBackground(Color.black);
@@ -286,152 +325,212 @@ public class Frame extends JFrame{
         horizontalCrossingLine4.setBounds(650,395,50,10);
         this.add(horizontalCrossingLine4);
 
+
         Feld field1 = new Feld((byte)1,(byte)1);
-        addFieldBehaviour(field1);
+        myMouseListener1 = new MyMouseListener(this,field1);
+        field1.addMouseListener(myMouseListener1);
         field1.setBounds(50,50,50,50);
         fields[0][0] = field1;
         this.add(field1);
 
 
         Feld field2 = new Feld((byte)1,(byte)2);
-        addFieldBehaviour(field2);
+        myMouseListener2 = new MyMouseListener(this,field2);
+        field2.addMouseListener(myMouseListener2);
         field2.setBounds(375,50,50,50);
         fields[0][1] = field2;
         this.add(field2);
 
         Feld field3 = new Feld((byte)1,(byte)3);
-        addFieldBehaviour(field3);
+        myMouseListener3 = new MyMouseListener(this,field3);
+        field3.addMouseListener(myMouseListener3);
         field3.setBounds(700,50,50,50);
         fields[0][2] = field3;
         this.add(field3);
 
         Feld field4 = new Feld((byte)1,(byte)4);
-        addFieldBehaviour(field4);
+        myMouseListener4 = new MyMouseListener(this,field4);
+        field4.addMouseListener(myMouseListener4);
         field4.setBounds(700,375,50,50);
         fields[0][3] = field4;
         this.add(field4);
 
         Feld field5 = new Feld((byte)1,(byte)5);
-        addFieldBehaviour(field5);
+        myMouseListener5 = new MyMouseListener(this,field5);
+        field5.addMouseListener(myMouseListener5);;
         field5.setBounds(700,700,50,50);
         fields[0][4] = field5;
         this.add(field5);
 
         Feld field6 = new Feld((byte)1,(byte)6);
-        addFieldBehaviour(field6);
+        myMouseListener6 = new MyMouseListener(this,field6);
+        field6.addMouseListener(myMouseListener6);
         field6.setBounds(375,700,50,50);
         fields[0][5] = field6;
         this.add(field6);
 
         Feld field7 = new Feld((byte)1,(byte)7);
-        addFieldBehaviour(field7);
+        myMouseListener7 = new MyMouseListener(this,field7);
+        field7.addMouseListener(myMouseListener7);
         field7.setBounds(50,700,50,50);
         fields[0][6] = field7;
         this.add(field7);
 
         Feld field8 = new Feld((byte)1,(byte)8);
-        addFieldBehaviour(field8);
+        myMouseListener8 = new MyMouseListener(this,field8);
+        field8.addMouseListener(myMouseListener8);
         field8.setBounds(50,375,50,50);
         fields[0][7] = field8;
         this.add(field8);
 
         Feld field9 = new Feld((byte)2,(byte)1);
-        addFieldBehaviour(field9);
+        myMouseListener9 = new MyMouseListener(this,field9);
+        field9.addMouseListener(myMouseListener9);
         field9.setBounds(150,150,50,50);
         fields[1][0] = field9;
         this.add(field9);
 
         Feld field10 = new Feld((byte)2,(byte)2);
-        addFieldBehaviour(field10);
+        myMouseListener10 = new MyMouseListener(this,field10);
+        field10.addMouseListener(myMouseListener10);
         field10.setBounds(375,150,50,50);
         fields[1][1] = field10;
         this.add(field10);
 
         Feld field11 = new Feld((byte)2,(byte)3);
-        addFieldBehaviour(field11);
+        myMouseListener11 = new MyMouseListener(this,field11);
+        field11.addMouseListener(myMouseListener11);
         field11.setBounds(600,150,50,50);
         fields[1][2] = field11;
         this.add(field11);
 
         Feld field12 = new Feld((byte)2,(byte)4);
-        addFieldBehaviour(field12);
+        myMouseListener12 = new MyMouseListener(this,field12);
+        field12.addMouseListener(myMouseListener12);
         field12.setBounds(600,375,50,50);
         fields[1][3] = field12;
         this.add(field12);
 
         Feld field13 = new Feld((byte)2,(byte)5);
-        addFieldBehaviour(field13);
+        myMouseListener13 = new MyMouseListener(this,field13);
+        field13.addMouseListener(myMouseListener13);
         field13.setBounds(600,600,50,50);
         fields[1][4] = field13;
         this.add(field13);
 
         Feld field14 = new Feld((byte)2,(byte)6);
-        addFieldBehaviour(field14);
+        myMouseListener14 = new MyMouseListener(this,field14);
+        field14.addMouseListener(myMouseListener14);
         field14.setBounds(375,600,50,50);
         fields[1][5] = field14;
         this.add(field14);
 
         Feld field15 = new Feld((byte)2,(byte)7);
-        addFieldBehaviour(field15);
+        myMouseListener15 = new MyMouseListener(this,field15);
+        field15.addMouseListener(myMouseListener15);
         field15.setBounds(150,600,50,50);
         fields[1][6] = field15;
         this.add(field15);
 
         Feld field16 = new Feld((byte)2,(byte)8);
-        addFieldBehaviour(field16);
+        myMouseListener16 = new MyMouseListener(this,field16);
+        field16.addMouseListener(myMouseListener16);
         field16.setBounds(150,375,50,50);
         fields[1][7] = field16;
         this.add(field16);
 
         Feld field17 = new Feld((byte)3,(byte)1);
-        addFieldBehaviour(field17);
+        myMouseListener17 = new MyMouseListener(this,field17);
+        field17.addMouseListener(myMouseListener17);
         field17.setBounds(250,250,50,50);
         fields[2][0] = field17;
         this.add(field17);
 
         Feld field18 = new Feld((byte)3,(byte)2);
-        addFieldBehaviour(field18);
+        myMouseListener18 = new MyMouseListener(this,field18);
+        field18.addMouseListener(myMouseListener18);
         field18.setBounds(375,250,50,50);
         fields[2][1] = field18;
         this.add(field18);
 
         Feld field19 = new Feld((byte)3,(byte)3);
-        addFieldBehaviour(field19);
+        myMouseListener19 = new MyMouseListener(this,field19);
+        field19.addMouseListener(myMouseListener19);
         field19.setBounds(500,250,50,50);
         fields[2][2] = field19;
         this.add(field19);
 
         Feld field20 = new Feld((byte)3,(byte)4);
-        addFieldBehaviour(field20);
+        myMouseListener20 = new MyMouseListener(this,field20);
+        field20.addMouseListener(myMouseListener20);
         field20.setBounds(500,375,50,50);
         fields[2][3] = field20;
         this.add(field20);
 
         Feld field21 = new Feld((byte)3,(byte)5);
-        addFieldBehaviour(field21);
+        myMouseListener21 = new MyMouseListener(this,field21);
+        field21.addMouseListener(myMouseListener21);
         field21.setBounds(500,500,50,50);
         fields[2][4] = field21;
         this.add(field21);
 
         Feld field22 = new Feld((byte)3,(byte)6);
-        addFieldBehaviour(field22);
+        myMouseListener22 = new MyMouseListener(this,field22);
+        field22.addMouseListener(myMouseListener22);
         field22.setBounds(375,500,50,50);
         fields[2][5] = field22;
         this.add(field22);
 
         Feld field23 = new Feld((byte)3,(byte)7);
-        addFieldBehaviour(field23);
+        myMouseListener23 = new MyMouseListener(this,field23);
+        field23.addMouseListener(myMouseListener23);
         field23.setBounds(250,500,50,50);
         fields[2][6] = field23;
         this.add(field23);
 
         Feld field24 = new Feld((byte)3,(byte)8);
-        addFieldBehaviour(field24);
+        myMouseListener24 = new MyMouseListener(this,field24);
+        field24.addMouseListener(myMouseListener24);
         field24.setBounds(250,375,50,50);
         fields[2][7] = field24;
         this.add(field24);
 
         this.setVisible(true);
+    }
+
+    public void NotYourTurn(){
+        for(int i=0;i<3;i++) {
+            for (int j = 0; j < 8; j++) {
+                fields[i][j].setEnabled(false);
+            }
+        }
+    }
+    public void YourTurn(){
+        for(int i=0;i<3;i++) {
+            for (int j = 0; j < 8; j++) {
+                fields[i][j].setEnabled(true);
+            }
+        }
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public Action getAction() {
+        return action;
+    }
+
+    public boolean isaMillWasCreatedInThePreviousAction() {
+        return aMillWasCreatedInThePreviousAction;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
+    public boolean isPlayerColour() {
+        return playerColour;
     }
 
     public void setaMillWasCreatedInThePreviousAction(boolean aMillWasCreatedInThePreviousAction) {
@@ -456,7 +555,7 @@ public class Frame extends JFrame{
             if (!gameOver) {
                 if (aMillWasCreatedInThePreviousAction) {
                     removeStone(field);
-                    if (allStonesAreBlocked() || lessThanThreeStonesOnBoard(playerColour)) {
+                    if (allStonesAreBlocked() || Frame.this.lessThanThreeStonesOnBoard(playerColour)) {
                         gameOver = true;
                         displayWinner(playerColour);
                     }
@@ -465,8 +564,7 @@ public class Frame extends JFrame{
                         firstPhaseMove(field);
                     } else if (getAmountOfStonesOutOfGame(playerColour) < 6) {
                         secondPhaseMove(field);
-                    }
-                    else {
+                    } else {
                         thirdPhaseMove(field);
                     }
                 }
@@ -475,6 +573,7 @@ public class Frame extends JFrame{
         });
     }
     public void firstPhaseMove(Feld field){
+        //action.setActionWasPerformed(false);
         if (field.isEmpty()){
             firstPhaseSetStone(field);
             if (stoneIsInMill(field)){
@@ -483,11 +582,13 @@ public class Frame extends JFrame{
             }
             else {
                 adaptDisplayOfCurrentPlayer();
+
+                Server.getGames().get(1).getFrame().firstPhaseSetStone(field);
             }
         }
     }
     public void firstPhaseSetStone(Feld field){
-        if (clientscopy.get(0).isPlayerColour()==playerColour){
+        if (playerColour){
             field.setIcon(new ImageIcon("WeisserStein.png"));
             whiteStonesOnBoard.add(field);
             amountOfUnusedWhiteStones --;
@@ -894,6 +995,7 @@ public class Frame extends JFrame{
                 setaMillWasCreatedInThePreviousAction(false);
             }
         }
+
     }
     public boolean notAllStonesAreInMill(){
         boolean returnValue = true;
@@ -1004,6 +1106,4 @@ public class Frame extends JFrame{
             return blackStonesOutOfGame.size();
         }
     }
-    //blalaalal
-    //lelele
 }

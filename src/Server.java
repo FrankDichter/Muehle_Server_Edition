@@ -11,12 +11,10 @@ public class Server {
     private static ArrayList<ClientHandler> clients;
     private static ExecutorService playerPool = Executors.newFixedThreadPool(2);
     private static ClientHandler clientThread;
+    private static GameHandler gameHandler;
     private static ArrayList<GameHandler> games;
-    private static ExecutorService gamePool = Executors.newFixedThreadPool(2);
-    private static GameHandler gameThread;
 
     public static ArrayList<ClientHandler> getClients(){return clients;}
-
     public static ArrayList<GameHandler> getGames() {return games;}
 
     public static void main(String[] args) throws IOException {
@@ -32,25 +30,19 @@ public class Server {
             System.out.println("[SERVER]: Connected to client!");
             if (clients.size() == 0){
                 clientThread = new ClientHandler(client,true);
-                gameThread = new GameHandler(client, clientThread.isPlayerColour());
+                gameHandler = new GameHandler(client, true);
             }
             else if (clients.size() == 1){
                 clientThread = new ClientHandler(client,!clients.get(0).isPlayerColour());
-                gameThread = new GameHandler(client, clientThread.isPlayerColour());
+                gameHandler = new GameHandler(client,!clients.get(0).isPlayerColour());
             }
             else {
                 clientThread = new ClientHandler(client);
-                gameThread = new GameHandler(client);
-
+                gameHandler = new GameHandler(client);
             }
-            clientThread.setGameHandler(gameThread);
             clients.add(clientThread);
+            games.add(gameHandler);
             playerPool.execute(clientThread);
-            games.add(gameThread);
-            if (clients.size() == 2) {
-                gamePool.execute(games.get(0));
-                gamePool.execute(games.get(1));
-            }
         }
     }
 }
