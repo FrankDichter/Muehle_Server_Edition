@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.event.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ public class Frame extends JFrame{
     private List<Feld> blackStonesOnBoard;
     private List<Feld> whiteStonesOutOfGame;
     private List<Feld> blackStonesOutOfGame;
-    private Feld[][] fields = new Feld[3][8];
+    private static Feld[][] fields = new Feld[3][8];
     private JLabel blackMoveLabel;
     private JLabel whiteMoveLabel;
     private JLabel blackTakeStoneLabel;
@@ -70,8 +71,9 @@ public class Frame extends JFrame{
     private JPanel horizontalCrossingLine2;
     private JPanel horizontalCrossingLine3;
     private JPanel horizontalCrossingLine4;
-    private static ArrayList<ClientHandler> clientscopy;
-    public void NotYourTurn(){
+    public static ArrayList<ClientHandler> clientscopy;
+
+    public static void NotYourTurn(){
         for(int i=0;i<3;i++) {
             for (int j = 0; j < 8; j++) {
                 fields[i][j].setEnabled(false);
@@ -79,7 +81,7 @@ public class Frame extends JFrame{
 
         }
     }
-    public void YourTurn(){
+    public static void YourTurn(){
         for(int i=0;i<3;i++) {
             for (int j = 0; j < 8; j++) {
                 fields[i][j].setEnabled(true);
@@ -88,9 +90,14 @@ public class Frame extends JFrame{
         }
     }
 
+
+
+
     public Frame(){
         clientscopy = new ArrayList<>();
-        clientscopy=Server.GiveClients();
+        clientscopy= Server.getClients();
+
+
 
         this.setTitle("Mühle");
         this.setLayout(null);
@@ -436,6 +443,15 @@ public class Frame extends JFrame{
         this.add(field24);
 
         this.setVisible(true);
+
+        //clientscopy.get(0).determinePlayer();
+
+        //if(playerturn==false){
+        //    NotYourTurn();
+        //}
+
+
+
     }
 
     public void setaMillWasCreatedInThePreviousAction(boolean aMillWasCreatedInThePreviousAction) {
@@ -455,9 +471,12 @@ public class Frame extends JFrame{
         else {return getAmountOfUnusedBlackStones();}
     }
 
+
     public void addFieldBehaviour (Feld field){
         field.addActionListener(e -> {
+
             if (!gameOver) {
+
                 if (aMillWasCreatedInThePreviousAction) {
                     removeStone(field);
                     if (allStonesAreBlocked() || lessThanThreeStonesOnBoard(playerColour)) {
@@ -467,20 +486,38 @@ public class Frame extends JFrame{
                 } else {
                     if (getAmountOfUnusedStones(playerColour) > 0) {
                         firstPhaseMove(field);
+                        ClientsSwitch();
+
                     } else if (getAmountOfStonesOutOfGame(playerColour) < 6) {
                         secondPhaseMove(field);
+                        ClientsSwitch();
+
                     }
                     else {
                         thirdPhaseMove(field);
+                        ClientsSwitch();
+
                     }
                 }
-            }
-            if(ClientHandler.isWhitePlayerTurn()==true){
-                YourTurn();
-                NotYourTurn();
 
             }
+
         });
+
+    }
+    public static void ClientsSwitch(){
+        if(ClientHandler.WhitePlayerTurn=true){
+            System.out.println("test1");
+            clientscopy.get(1).determinePlayer2();
+            ClientHandler.WhitePlayerTurn=false;
+            System.out.println( ClientHandler.WhitePlayerTurn);
+           // clientscopy.get(0).determinePlayer();
+        }else if(ClientHandler.WhitePlayerTurn=false){
+            System.out.println("test2");
+            clientscopy.get(0).determinePlayer2();
+            ClientHandler.WhitePlayerTurn=true;
+            clientscopy.get(1).determinePlayer();
+        }
     }
     public void firstPhaseMove(Feld field){
         if (field.isEmpty()){
@@ -488,11 +525,13 @@ public class Frame extends JFrame{
             if (stoneIsInMill(field)){
                 addRequestToDeleteStone();
                 setaMillWasCreatedInThePreviousAction(true);
+                ClientsSwitch();
             }
             else {
                 adaptDisplayOfCurrentPlayer();
             }
         }
+
     }
     public void firstPhaseSetStone(Feld field){
         if (clientscopy.get(0).playerColour==playerColour){

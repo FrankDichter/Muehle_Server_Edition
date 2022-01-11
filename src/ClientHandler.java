@@ -7,13 +7,16 @@ public class ClientHandler implements Runnable {
     private BufferedReader input;
     private PrintWriter output;
 
-    public ArrayList<ClientHandler> getClients() {
-        return clients;
-    }
+    //public static ArrayList<ClientHandler> getClients() {
+        //return clients;
+    //}
+
+
+
 
     private ArrayList<ClientHandler> clients;
     public boolean playerColour;
-    private static boolean WhitePlayerTurn=true;
+    public static boolean WhitePlayerTurn=true;
     public static boolean isWhitePlayerTurn() {
         return WhitePlayerTurn;
     }
@@ -30,10 +33,41 @@ public class ClientHandler implements Runnable {
     }
 
 
+     public void determinePlayer(){
+        if(ClientHandler.isWhitePlayerTurn()==true){
+            if(this.playerColour==false){
+                Frame.NotYourTurn();
+            }
+             }
+        else if(ClientHandler.isWhitePlayerTurn()==false){
+            if(this.playerColour==true){
+                Frame.NotYourTurn();
+            }
+        }
+
+
+    }
+    public void determinePlayer2() {
+        if (ClientHandler.isWhitePlayerTurn() == true) {
+            if (this.playerColour == false) {
+                Frame.YourTurn();
+            }
+        }
+       else if (ClientHandler.isWhitePlayerTurn() == false) {
+            if (this.playerColour == true) {
+                Frame.YourTurn();
+            }
+        }
+    }
+
 
     public boolean isPlayerColour() {
         return playerColour;
     }
+
+
+
+    int a=0;
 
     public ClientHandler (Socket clientSocket, ArrayList<ClientHandler> clients, boolean playerColour) throws IOException {
         this.client = clientSocket;
@@ -42,11 +76,22 @@ public class ClientHandler implements Runnable {
         input = new BufferedReader(new InputStreamReader(client.getInputStream()));
         output = new PrintWriter(client.getOutputStream(),true);
 
+
+
+
+
+
     }
     @Override
     public void run(){
         try{
-            Frame frame = new Frame();
+
+                Frame frame = new Frame();
+
+            determinePlayer();
+
+
+
 
             nameInteraction(Server.getClientThread().isPlayerColour());
 
@@ -66,6 +111,7 @@ public class ClientHandler implements Runnable {
             System.err.println("IOException in client handler");
             System.err.println(e.getStackTrace());
         }
+
         finally {
             output.close();
             try {
@@ -77,6 +123,7 @@ public class ClientHandler implements Runnable {
 
 
     }
+
     private void outToAll(String message){
         for (ClientHandler clientHandler : clients){
             clientHandler.output.println("["+getPlayerName()+"]: "+message);

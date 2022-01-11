@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 public class Feld extends JButton /*implements ActionListener*/ {
     private final byte circle;
@@ -12,6 +13,7 @@ public class Feld extends JButton /*implements ActionListener*/ {
         this.circle = circle;
         this.positionOnCircle = positionOnCircle;
         isEmpty = true;
+
     }
 
     public byte getCircle() {
